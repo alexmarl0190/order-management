@@ -1,0 +1,60 @@
+<section class="users-page">
+
+    <header class="users-header">
+        <div>
+            <h1>Gestor de Reportes</h1>
+            <p>Crear y descargar reportes en PDF</p>
+        </div>
+
+        <button class="btn-primary" (click)="openCreate()">
+            + Nuevo Reporte
+        </button>
+    </header>
+
+    <div class="users-filters">
+        <input type="text" placeholder="Buscar Reporte" (input)="search.set($any($event.target).value)" />
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Reporte</th>
+                    <th>Descargar</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (report of reports(); track report.id) {
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.name }}</td>
+                    <td>
+                        <button class="download" (click)="download(report)">
+                            ⬇ PDF
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- MODAL -->
+@if (showForm()) {
+<div class="modal-backdrop">
+    <div class="modal">
+        <h2>Nuevo Reporte</h2>
+
+        <input placeholder="Nombre del reporte" [(ngModel)]="form.name" />
+        <input placeholder="Ruta del PDF" [(ngModel)]="form.file_path" />
+
+        <div class="modal-actions">
+            <button class="ghost" (click)="showForm.set(false)">Cancelar</button>
+            <button class="btn-primary" (click)="saveReport()">Guardar</button>
+        </div>
+    </div>
+</div>
+}

@@ -1,0 +1,62 @@
+<div class="modal-backdrop">
+    <div class="modal">
+
+        <header class="modal-header">
+            <h2>{{ user ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+            <p>Ingresa la información debajo</p>
+        </header>
+
+        <div class="modal-body">
+            <input placeholder="Nombre" [(ngModel)]="form.first_name" />
+            <input placeholder="Apellido" [(ngModel)]="form.last_name" />
+            <input placeholder="Correo" [(ngModel)]="form.email" />
+
+            <!-- CONTRASEÑA -->
+            <div class="input-group password-group" *ngIf="!user">
+                <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="form.password"
+                    placeholder="Contraseña" />
+
+                <button type="button" class="toggle-password" (click)="togglePassword()"
+                    aria-label="Toggle password visibility">
+                    <img [src]="showPassword
+        ? '/icons/visibility_off.svg'
+        : '/icons/visibility.svg'" alt="Toggle password visibility" />
+                </button>
+            </div>
+
+
+            <!-- CONFIRMAR CONTRASEÑA -->
+            <div class="input-group password-group" *ngIf="!user">
+                <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="form.confirmPassword"
+                    placeholder="Confirmar contraseña" />
+
+                <button type="button" class="toggle-password" (click)="toggleConfirmPassword()"
+                    aria-label="Toggle password visibility">
+                    <img [src]="showConfirmPassword
+        ? '/icons/visibility_off.svg'
+        : '/icons/visibility.svg'" alt="Toggle password visibility" />
+                </button>
+            </div>
+
+
+            <!-- ERROR -->
+            <p class="error" *ngIf="passwordError">
+                Las contraseñas no coinciden
+            </p>
+
+            <select [(ngModel)]="form.role">
+                <option value="admin">Administrador</option>
+                <option value="user">Usuario</option>
+            </select>
+        </div>
+
+        <footer class="modal-actions">
+            <button class="ghost" (click)="close.emit()">Cancelar</button>
+
+            <button class="btn-primary" (click)="submit()">
+                Guardar
+            </button>
+        </footer>
+
+    </div>
+</div>

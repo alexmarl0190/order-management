@@ -1,0 +1,38 @@
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Order Management</h1>
+            <p>Accede para continuar</p>
+        </div>
+
+        <form (ngSubmit)="login()" class="login-form">
+            <div class="input-group">
+                <label>Correo</label>
+                <input type="email" [(ngModel)]="email" name="email" placeholder="tu@correo.com" required />
+            </div>
+
+            <div class="input-group password-group">
+                <label>Contraseña</label>
+
+                <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password"
+                    placeholder="••••••••" required />
+
+                <button type="button" class="toggle-password" (click)="togglePassword()"
+                    aria-label="Toggle password visibility">
+                    <img [src]="showPassword 
+                        ? '/icons/visibility_off.svg' 
+                        : '/icons/visibility.svg'" alt="Toggle password visibility" />
+                </button>
+            </div>
+
+
+            <button class="login-button" type="submit">
+                Iniciar sesión
+            </button>
+        </form>
+
+        <p *ngIf="error" class="error-message">
+            {{ error }}
+        </p>
+    </div>
+</div>

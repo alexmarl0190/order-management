@@ -1,0 +1,105 @@
+<section class="users-page">
+
+    <!-- Header -->
+    <header class="users-header">
+        <div>
+            <h1>Lista de Usuarios</h1>
+            <p>Gestiona los usuarios y sus permisos desde aquí.</p>
+        </div>
+
+        <button class="btn-primary" (click)="openCreate()">
+            Añadir Usuario
+        </button>
+    </header>
+
+    <!-- Filters -->
+    <div class="users-filters">
+        <input type="text" placeholder="Filtrar Usuario" (input)="search.set($any($event.target).value)" />
+
+        <select (change)="statusFilter.set($any($event.target).value)">
+            <option value="all">Todos</option>
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+        </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    @for (header of table.getHeaderGroups()[0].headers; track header.id) {
+                    <th>{{ header.column.columnDef.header }}</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (row of table.getRowModel().rows; track row.id) {
+                <tr>
+                    <td>
+                        <input type="checkbox" />
+                    </td>
+
+                    @for (cell of row.getVisibleCells(); track cell.id) {
+                    <td>
+                        <!-- STATUS -->
+                        @if (cell.column.id === 'status') {
+                        <span class="status" [class.inactive]="cell.getValue() === 'inactive'">
+                            {{ cell.getValue() }}
+                        </span>
+                        }
+
+                        <!-- ACTIONS -->
+                        @else if (cell.column.id === 'actions') {
+                        <div class="actions">
+
+                            <!-- EDITAR (siempre) -->
+                            <button (click)="openEdit(row.original)">✏️</button>
+
+                            <!-- ACTIVAR -->
+                            @if (row.original.status === 'inactive') {
+                            <button class="success" (click)="activate(row.original)">
+                                🟢
+                            </button>
+                            }
+
+                            <!-- DESACTIVAR -->
+                            @else {
+                            <button class="danger" (click)="deactivate(row.original)">
+                                🗑
+                            </button>
+                            }
+
+                        </div>
+                        }
+
+                        <!-- DEFAULT -->
+                        @else {
+                        {{ cell.getValue() }}
+                        }
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        <span>
+            Página {{ table.getState().pagination.pageIndex + 1 }}
+            de {{ table.getPageCount() }}
+        </span>
+
+        <div>
+            <button (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()">‹</button>
+            <button (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">›</button>
+        </div>
+    </div>
+</section>
+
+<app-user-form *ngIf="showForm()" [user]="editingUser()" (save)="saveUser($event)" (close)="showForm.set(false)">
+</app-user-form>

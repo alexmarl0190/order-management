@@ -1,0 +1,119 @@
+<section class="users-page">
+
+    <!-- Header -->
+    <header class="users-header">
+        <div>
+            <h1>Acuerdos Globales</h1>
+            <p>Configuraciones enviadas a n8n</p>
+        </div>
+
+        <button class="btn-primary" (click)="openCreate()">
+            + Nuevo Acuerdo
+        </button>
+    </header>
+
+    <!-- Filters -->
+    <div class="users-filters">
+        <input type="text" placeholder="Buscar acuerdo..." (input)="search.set($any($event.target).value)" />
+
+        <select (change)="statusFilter.set($any($event.target).value)">
+            <option value="all">Todos</option>
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+        </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    @for (header of table.getHeaderGroups()[0].headers; track header.id) {
+                    <th>{{ header.column.columnDef.header }}</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (row of table.getRowModel().rows; track row.id) {
+                <tr>
+                    @for (cell of row.getVisibleCells(); track cell.id) {
+                    <td>
+
+                        <!-- STATUS -->
+                        @if (cell.column.id === 'status') {
+                        <span class="status" [class.inactive]="cell.getValue() === 'inactive'">
+                            {{ cell.getValue() }}
+                        </span>
+                        }
+
+                        <!-- ACTIONS -->
+                        @else if (cell.column.id === 'actions') {
+                        <div class="actions">
+                            <button (click)="toggleStatus(row.original)"
+                                [class.danger]="row.original.status === 'active'"
+                                [class.success]="row.original.status === 'inactive'">
+                                {{ row.original.status === 'active' ? '🗑' : '🟢' }}
+                            </button>
+                        </div>
+                        }
+
+                        <!-- DEFAULT -->
+                        @else {
+                        {{ cell.getValue() }}
+                        }
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        <span>
+            Página {{ table.getState().pagination.pageIndex + 1 }}
+            de {{ table.getPageCount() }}
+        </span>
+
+        <div>
+            <button (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()">‹</button>
+            <button (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">›</button>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL -->
+@if (showForm()) {
+<div class="modal-backdrop">
+    <div class="modal">
+
+        <header class="modal-header">
+            <h2>Nuevo Acuerdo Global</h2>
+            <p>Configuración base para n8n</p>
+        </header>
+
+        <div class="modal-body">
+            <input placeholder="ID del acuerdo (AG-SHOP_MX-001)" [(ngModel)]="form().agreement_key" />
+
+            <input placeholder="Nombre del acuerdo" [(ngModel)]="form().name" />
+
+            <select [(ngModel)]="form().project_id">
+                <option [ngValue]="null">Selecciona un proyecto</option>
+                @for (project of projects(); track project.id) {
+                <option [ngValue]="project.id">
+                    {{ project.name }}
+                </option>
+                }
+            </select>
+        </div>
+
+        <footer class="modal-actions">
+            <button class="ghost" (click)="showForm.set(false)">Cancelar</button>
+            <button class="btn-primary" (click)="saveAgreement()">Guardar</button>
+        </footer>
+
+    </div>
+</div>
+}
