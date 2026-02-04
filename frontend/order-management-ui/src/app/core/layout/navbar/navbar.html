@@ -30,9 +30,21 @@
         </button>
 
         <div class="user-menu" *ngIf="isUserMenuOpen" (click)="$event.stopPropagation()">
-            <strong>{{ user.first_name }} {{ user.last_name }}</strong>
-            <p class="email">{{ user.email }}</p>
-            <button class="logout" (click)="logout()">Cerrar sesión</button>
+            <div class="userData">
+                <div class="avatar">
+                    {{ user.first_name[0] }}{{ user.last_name[0] }}
+                </div>
+                <div>
+                    <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                    <p class="email">{{ user.email }}</p>
+                </div>
+
+            </div>
+            <div class="logout-container" (click)="logout()">
+                <img src="/icons/logout.svg" alt="">
+                <button class="logout">Cerrar sesión</button>
+            </div>
+
         </div>
     </div>
 
